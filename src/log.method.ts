@@ -1,4 +1,4 @@
-import { setFnCommand } from "./utils"
+import { setFnCommand } from './utils'
 
 /**
  * Creates a global variable with a getter that triggers a callback when typed in the browser console.
@@ -8,7 +8,7 @@ export function log(options: {
   command?: string
   onCommandTyped: (command: string) => void
 }): {
-  run: (command: string) => void
+  run: (command?: string) => void
 } {
   if (typeof options.onCommandTyped !== 'function') {
     throw new Error(
@@ -16,8 +16,12 @@ export function log(options: {
     )
   }
 
-  const run = (command: string) => {
-    setFnCommand(command, options.onCommandTyped)
+  if (options.command) {
+    setFnCommand(options.command, options.onCommandTyped)
+  }
+
+  const run = () => {
+    options.onCommandTyped(options.command || '')
   }
 
   return { run }
